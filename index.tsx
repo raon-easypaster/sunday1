@@ -1,9 +1,10 @@
-// Fix: Import React and ReactDOM to resolve UMD global errors as this file is being treated as a module.
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-
 // All types, components, and application logic are consolidated into this single file.
 // This removes the need for module imports/exports, resolving deployment issues.
+// React and ReactDOM are available as global variables from the UMD scripts in index.html.
+
+// FIX: Add imports for React and ReactDOM to fix module-related errors.
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 
 // --- TYPE DEFINITIONS ---
 interface WorshipOrderItem {
