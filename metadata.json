@@ -1,0 +1,5 @@
+{
+  "name": "교회순서지 제작",
+  "description": "A web application to create and display a weekly church bulletin. Users can edit all sections of the bulletin, including the order of worship, news, financial reports, and upload a new hymn sheet music image each week.",
+  "requestFramePermissions": []
+}
