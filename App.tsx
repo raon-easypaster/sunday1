@@ -1,5 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
+// Fix: Import React to resolve UMD global errors for React hooks (useState, useEffect).
+import React from 'react';
 import EditMode from './components/EditMode.tsx';
 import ViewMode from './components/ViewMode.tsx';
 import { EditIcon, ViewIcon, ShareIcon } from './components/icons.tsx';
@@ -86,11 +86,11 @@ const initialBulletinData: BulletinData = {
 
 
 const App = () => {
-  const [bulletinData, setBulletinData] = useState<BulletinData>(initialBulletinData);
-  const [isEditing, setIsEditing] = useState(true);
-  const [showCopyMessage, setShowCopyMessage] = useState(false);
+  const [bulletinData, setBulletinData] = React.useState<BulletinData>(initialBulletinData);
+  const [isEditing, setIsEditing] = React.useState(true);
+  const [showCopyMessage, setShowCopyMessage] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const data = params.get('data');
 

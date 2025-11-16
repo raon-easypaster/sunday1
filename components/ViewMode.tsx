@@ -1,5 +1,3 @@
-
-import React from 'react';
 import type { BulletinData } from '../types.ts';
 
 // Fix: Extracted inline styles to constants to improve readability and resolve a potential JSX parsing issue.

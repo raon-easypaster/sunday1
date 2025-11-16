@@ -1,5 +1,3 @@
-
-import React from 'react';
 import type { BulletinData } from '../types.ts';
 
 const EditMode = ({ data, setData }: { data: BulletinData, setData: any }) => {
