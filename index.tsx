@@ -1,12 +1,10 @@
-// FIX: Add React and ReactDOM imports to resolve module scope errors.
-// The presence of JSX syntax causes the TypeScript compiler to treat this file
-// as a module, which requires React and ReactDOM to be explicitly imported.
-import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
-
 // All types, components, and application logic are consolidated into this single file.
 // This removes the need for module imports/exports, resolving deployment issues.
 // React and ReactDOM are available as global variables from the UMD scripts in index.html.
+
+// FIX: Import React and ReactDOM to resolve UMD global errors in a module context.
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 
 // --- TYPE DEFINITIONS ---
 interface WorshipOrderItem {
@@ -111,7 +109,7 @@ const ChurchLogo = () => (
   </div>
 );
 
-const Section = ({ title, children, className = '' }: { title: string; children: React.ReactNode; className?: string; }) => (
+const Section = ({ title, children, className = '' }) => (
   <div className={`bg-white p-4 md:p-8 mb-8 shadow-lg rounded-lg ${className}`}>
     <div className="flex justify-between items-start mb-6">
       <h2 className="text-3xl md:text-4xl font-black text-gray-700">{title}</h2>
@@ -123,7 +121,7 @@ const Section = ({ title, children, className = '' }: { title: string; children:
   </div>
 );
 
-const ViewMode = ({ data }: { data: BulletinData }) => {
+const ViewMode = ({ data }) => {
   return (
     <div className="text-gray-800">
       {/* Page 1: Main Cover */}
@@ -247,8 +245,8 @@ const ViewMode = ({ data }: { data: BulletinData }) => {
 
 
 // --- EDITMODE COMPONENT ---
-const EditMode = ({ data, setData }: { data: BulletinData, setData: React.Dispatch<React.SetStateAction<BulletinData>> }) => {
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+const EditMode = ({ data, setData }) => {
+  const handleTextChange = (e) => {
     const { name, value } = e.target;
     const [section, field, subfield] = name.split('.');
     
@@ -263,12 +261,12 @@ const EditMode = ({ data, setData }: { data: BulletinData, setData: React.Dispat
     });
   };
 
-  const handleArrayChange = (section: keyof BulletinData, index: number, field: string, value: string) => {
+  const handleArrayChange = (section, index, field, value) => {
       setData((prev) => {
         const newPrev = JSON.parse(JSON.stringify(prev)); // Deep copy
         const sectionData = newPrev[section];
 
-        const updateArray = (arr: any[]) => {
+        const updateArray = (arr) => {
           arr[index] = { ...arr[index], [field]: value };
           return arr;
         };
@@ -276,27 +274,27 @@ const EditMode = ({ data, setData }: { data: BulletinData, setData: React.Dispat
         if (Array.isArray(sectionData)) {
             newPrev[section] = updateArray(sectionData);
         } else if (typeof sectionData === 'object' && sectionData !== null) {
-           if ('items' in sectionData && Array.isArray((sectionData as any).items)) {
-             (sectionData as any).items = updateArray((sectionData as any).items);
+           if ('items' in sectionData && Array.isArray((sectionData).items)) {
+             (sectionData).items = updateArray((sectionData).items);
            }
-           if ('reports' in sectionData && Array.isArray((sectionData as any).reports)) {
-             (sectionData as any).reports = updateArray((sectionData as any).reports);
+           if ('reports' in sectionData && Array.isArray((sectionData).reports)) {
+             (sectionData).reports = updateArray((sectionData).reports);
            }
-            if ('weekly' in sectionData && Array.isArray((sectionData as any).weekly)) {
-             (sectionData as any).weekly = updateArray((sectionData as any).weekly);
+            if ('weekly' in sectionData && Array.isArray((sectionData).weekly)) {
+             (sectionData).weekly = updateArray((sectionData).weekly);
            }
         }
         return newPrev;
       });
   };
 
-  const handleHymnImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHymnImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (event) => {
         setData((prev) => ({
           ...prev,
-          hymn: { ...prev.hymn, musicSheet: event.target?.result as string }
+          hymn: { ...prev.hymn, musicSheet: event.target?.result }
         }));
       };
       reader.readAsDataURL(e.target.files[0]);
@@ -417,7 +415,7 @@ const EditMode = ({ data, setData }: { data: BulletinData, setData: React.Dispat
 
 
 // --- MAIN APP COMPONENT ---
-const initialBulletinData: BulletinData = {
+const initialBulletinData = {
   main: {
     issue: "제26-46호",
     date: "2025.11.16",
