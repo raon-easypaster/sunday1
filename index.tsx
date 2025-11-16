@@ -1,11 +1,10 @@
-// Fix: Add imports for React and ReactDOM to resolve UMD global errors.
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+// React and ReactDOM are loaded as global variables from the UMD scripts in index.html.
+// DO NOT add import statements for them here, as it will cause conflicts.
 
 // All types, components, and application logic are consolidated into this single file.
 // This removes the need for module imports/exports, resolving deployment issues.
 
-// --- FROM types.ts ---
+// --- TYPE DEFINITIONS ---
 interface WorshipOrderItem {
   item: string;
   subitem?: string;
@@ -74,7 +73,7 @@ interface BulletinData {
   };
 }
 
-// --- FROM components/icons.tsx ---
+// --- ICON COMPONENTS ---
 const EditIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z" />
@@ -90,12 +89,12 @@ const ViewIcon = () => (
 
 const ShareIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.368a3 3 0 105.367 2.684 3 3 0 00-5.367 2.684z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.368a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
     </svg>
 );
 
 
-// --- FROM components/ViewMode.tsx ---
+// --- VIEWMODE COMPONENT ---
 const churchLogoPStyle = { color: '#F2A03D' };
 const churchLogoSpanStyle = { color: '#585858' };
 
@@ -243,54 +242,44 @@ const ViewMode = ({ data }: { data: BulletinData }) => {
 };
 
 
-// --- FROM components/EditMode.tsx ---
-const EditMode = ({ data, setData }: { data: BulletinData, setData: any }) => {
+// --- EDITMODE COMPONENT ---
+const EditMode = ({ data, setData }: { data: BulletinData, setData: (updater: (prev: BulletinData) => BulletinData) => void }) => {
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     const [section, field, subfield] = name.split('.');
     
-    if (subfield) {
-        setData((prev: BulletinData) => ({
-            ...prev,
-            [section]: {
-                ...prev[section],
-                [field]: {
-                    ...prev[section][field],
-                    [subfield]: value
-                }
-            }
-        }));
-    } else {
-        setData((prev: BulletinData) => ({
-          ...prev,
-          [section]: { ...prev[section], [field]: value }
-        }));
-    }
+    setData((prev: BulletinData) => {
+        const newPrev = JSON.parse(JSON.stringify(prev)); // Deep copy to avoid mutation issues
+        if (subfield) {
+            newPrev[section][field][subfield] = value;
+        } else {
+            newPrev[section][field] = value;
+        }
+        return newPrev;
+    });
   };
 
   const handleArrayChange = (section: keyof BulletinData, index: number, field: string, value: string) => {
       setData((prev: BulletinData) => {
-        const sectionData = prev[section];
+        const newPrev = JSON.parse(JSON.stringify(prev)); // Deep copy
+        const sectionData = newPrev[section];
 
         const updateArray = (arr: any[]) => {
-          const newArray = [...arr];
-          newArray[index] = { ...newArray[index], [field]: value };
-          return newArray;
+          arr[index] = { ...arr[index], [field]: value };
+          return arr;
         };
         
-        const newPrev = {...prev};
-
         if (Array.isArray(sectionData)) {
-            (newPrev[section] as any) = updateArray(sectionData);
+            newPrev[section] = updateArray(sectionData);
         } else if (typeof sectionData === 'object' && sectionData !== null) {
-           if ('items' in sectionData && Array.isArray(sectionData.items)) {
-             (sectionData as any).items = updateArray(sectionData.items);
+           if ('items' in sectionData && Array.isArray((sectionData as any).items)) {
+             (sectionData as any).items = updateArray((sectionData as any).items);
            }
-           if ('reports' in sectionData && Array.isArray(sectionData.reports)) {
-             (sectionData as any).reports = updateArray(sectionData.reports);
+           if ('reports' in sectionData && Array.isArray((sectionData as any).reports)) {
+             (sectionData as any).reports = updateArray((sectionData as any).reports);
            }
-            if ('weekly' in sectionData && Array.isArray(sectionData.weekly)) {
-             (sectionData as any).weekly = updateArray(sectionData.weekly);
+            if ('weekly' in sectionData && Array.isArray((sectionData as any).weekly)) {
+             (sectionData as any).weekly = updateArray((sectionData as any).weekly);
            }
         }
         return newPrev;
@@ -423,7 +412,7 @@ const EditMode = ({ data, setData }: { data: BulletinData, setData: any }) => {
 };
 
 
-// --- FROM App.tsx ---
+// --- MAIN APP COMPONENT ---
 const initialBulletinData: BulletinData = {
   main: {
     issue: "제26-46호",
@@ -579,7 +568,7 @@ const App = () => {
 };
 
 
-// --- Mount the application ---
+// --- MOUNT THE APPLICATION ---
 const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error("Could not find root element to mount to");
