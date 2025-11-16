@@ -6,10 +6,14 @@ interface ViewModeProps {
   data: BulletinData;
 }
 
+// Fix: Extracted inline styles to constants to improve readability and resolve a potential JSX parsing issue.
+const churchLogoPStyle = { color: '#F2A03D' };
+const churchLogoSpanStyle = { color: '#585858' };
+
 const ChurchLogo: React.FC = () => (
   <div className="text-right">
     <div className="inline-block">
-      <p className="font-oswald text-xl sm:text-2xl font-bold" style={{ color: '#F2A03D' }}>RAON<span className="font-sans" style={{ color: '#585858' }}>동행</span></p>
+      <p className="font-oswald text-xl sm:text-2xl font-bold" style={churchLogoPStyle}>RAON<span className="font-sans" style={churchLogoSpanStyle}>동행</span></p>
       <p className="stencil-text text-3xl sm:text-4xl -mt-2">CHURCH</p>
     </div>
   </div>
