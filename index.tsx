@@ -1,4 +1,4 @@
-// Fix: Add missing imports for React and ReactDOM to resolve UMD global errors.
+// Fix: Add imports for React and ReactDOM to resolve UMD global errors.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
