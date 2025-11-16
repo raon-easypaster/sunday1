@@ -2,7 +2,7 @@
 // This removes the need for module imports/exports, resolving deployment issues.
 // React and ReactDOM are available as global variables from the UMD scripts in index.html.
 
-// FIX: Add imports for React and ReactDOM to fix module-related errors.
+// FIX: Import React and ReactDOM to resolve UMD global errors and treat the file as a module.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
@@ -572,13 +572,13 @@ const App = () => {
 
 // --- MOUNT THE APPLICATION ---
 const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
+if (rootElement) {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    );
+} else {
+    console.error("Fatal: Root element not found in the DOM.");
 }
-
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
