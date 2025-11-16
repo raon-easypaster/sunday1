@@ -30,7 +30,7 @@
         color: #4A4A4A;
       }
     </style>
-    <!-- 1. Load React and ReactDOM as global variables -->
+    <!-- 1. Load React and ReactDOM as global variables. This is the ONLY method we will use. -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
     <!-- 2. Load Babel to transpile JSX/TS -->
@@ -47,7 +47,7 @@
 </head>
   <body>
     <div id="root"></div>
-    <!-- 3. Load and transpile our single application file -->
+    <!-- 3. Load and transpile our single application file. No importmap is needed. -->
     <script type="text/babel" data-presets="react,typescript" src="./index.tsx"></script>
   </body>
 </html>

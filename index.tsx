@@ -1,7 +1,4 @@
-// React and ReactDOM are loaded as global variables from the UMD scripts in index.html.
-// DO NOT add import statements for them here, as it will cause conflicts.
-
-// Fix: Add React and ReactDOM imports to resolve UMD global errors as the build environment treats this file as a module.
+// Fix: Import React and ReactDOM to resolve UMD global errors as this file is being treated as a module.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
@@ -111,7 +108,7 @@ const ChurchLogo = () => (
   </div>
 );
 
-const Section = ({ title, children, className = '' }: { title: string, children: React.ReactNode, className?: string }) => (
+const Section = ({ title, children, className = '' }: { title: string; children: React.ReactNode; className?: string; }) => (
   <div className={`bg-white p-4 md:p-8 mb-8 shadow-lg rounded-lg ${className}`}>
     <div className="flex justify-between items-start mb-6">
       <h2 className="text-3xl md:text-4xl font-black text-gray-700">{title}</h2>
@@ -247,12 +244,12 @@ const ViewMode = ({ data }: { data: BulletinData }) => {
 
 
 // --- EDITMODE COMPONENT ---
-const EditMode = ({ data, setData }: { data: BulletinData, setData: (updater: (prev: BulletinData) => BulletinData) => void }) => {
+const EditMode = ({ data, setData }: { data: BulletinData, setData: React.Dispatch<React.SetStateAction<BulletinData>> }) => {
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     const [section, field, subfield] = name.split('.');
     
-    setData((prev: BulletinData) => {
+    setData((prev) => {
         const newPrev = JSON.parse(JSON.stringify(prev)); // Deep copy to avoid mutation issues
         if (subfield) {
             newPrev[section][field][subfield] = value;
@@ -264,7 +261,7 @@ const EditMode = ({ data, setData }: { data: BulletinData, setData: (updater: (p
   };
 
   const handleArrayChange = (section: keyof BulletinData, index: number, field: string, value: string) => {
-      setData((prev: BulletinData) => {
+      setData((prev) => {
         const newPrev = JSON.parse(JSON.stringify(prev)); // Deep copy
         const sectionData = newPrev[section];
 
@@ -294,7 +291,7 @@ const EditMode = ({ data, setData }: { data: BulletinData, setData: (updater: (p
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setData((prev: BulletinData) => ({
+        setData((prev) => ({
           ...prev,
           hymn: { ...prev.hymn, musicSheet: event.target?.result as string }
         }));
@@ -497,7 +494,7 @@ const initialBulletinData: BulletinData = {
 };
 
 const App = () => {
-  const [bulletinData, setBulletinData] = React.useState<BulletinData>(initialBulletinData);
+  const [bulletinData, setBulletinData] = React.useState(initialBulletinData);
   const [isEditing, setIsEditing] = React.useState(true);
   const [showCopyMessage, setShowCopyMessage] = React.useState(false);
 
