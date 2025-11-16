@@ -1,6 +1,10 @@
 // React and ReactDOM are loaded as global variables from the UMD scripts in index.html.
 // DO NOT add import statements for them here, as it will cause conflicts.
 
+// Fix: Add React and ReactDOM imports to resolve UMD global errors as the build environment treats this file as a module.
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
 // All types, components, and application logic are consolidated into this single file.
 // This removes the need for module imports/exports, resolving deployment issues.
 
