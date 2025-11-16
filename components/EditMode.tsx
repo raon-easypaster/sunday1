@@ -1,13 +1,14 @@
 
 import React from 'react';
+import type { BulletinData } from '../types.ts';
 
-const EditMode = ({ data, setData }) => {
-  const handleTextChange = (e) => {
+const EditMode = ({ data, setData }: { data: BulletinData, setData: any }) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     const [section, field, subfield] = name.split('.');
     
     if (subfield) {
-        setData(prev => ({
+        setData((prev: BulletinData) => ({
             ...prev,
             [section]: {
                 ...prev[section],
@@ -18,47 +19,49 @@ const EditMode = ({ data, setData }) => {
             }
         }));
     } else {
-        setData(prev => ({
+        setData((prev: BulletinData) => ({
           ...prev,
           [section]: { ...prev[section], [field]: value }
         }));
     }
   };
 
-  const handleArrayChange = (section, index, field, value) => {
-      setData(prev => {
+  const handleArrayChange = (section: keyof BulletinData, index: number, field: string, value: string) => {
+      setData((prev: BulletinData) => {
         const sectionData = prev[section];
 
-        const updateArray = (arr) => {
+        const updateArray = (arr: any[]) => {
           const newArray = [...arr];
           newArray[index] = { ...newArray[index], [field]: value };
           return newArray;
         };
+        
+        const newPrev = {...prev};
 
         if (Array.isArray(sectionData)) {
-            return { ...prev, [section]: updateArray(sectionData) };
+            (newPrev[section] as any) = updateArray(sectionData);
         } else if (typeof sectionData === 'object' && sectionData !== null) {
            if ('items' in sectionData && Array.isArray(sectionData.items)) {
-             return { ...prev, [section]: { ...sectionData, items: updateArray(sectionData.items) } };
+             (sectionData as any).items = updateArray(sectionData.items);
            }
            if ('reports' in sectionData && Array.isArray(sectionData.reports)) {
-             return { ...prev, [section]: { ...sectionData, reports: updateArray(sectionData.reports) } };
+             (sectionData as any).reports = updateArray(sectionData.reports);
            }
             if ('weekly' in sectionData && Array.isArray(sectionData.weekly)) {
-             return { ...prev, [section]: { ...sectionData, weekly: updateArray(sectionData.weekly) } };
+             (sectionData as any).weekly = updateArray(sectionData.weekly);
            }
         }
-        return prev;
+        return newPrev;
       });
   };
 
-  const handleHymnImageChange = (e) => {
+  const handleHymnImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setData(prev => ({
+        setData((prev: BulletinData) => ({
           ...prev,
-          hymn: { ...prev.hymn, musicSheet: event.target?.result }
+          hymn: { ...prev.hymn, musicSheet: event.target?.result as string }
         }));
       };
       reader.readAsDataURL(e.target.files[0]);

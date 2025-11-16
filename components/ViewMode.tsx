@@ -1,5 +1,6 @@
 
 import React from 'react';
+import type { BulletinData } from '../types.ts';
 
 // Fix: Extracted inline styles to constants to improve readability and resolve a potential JSX parsing issue.
 const churchLogoPStyle = { color: '#F2A03D' };
@@ -14,7 +15,7 @@ const ChurchLogo = () => (
   </div>
 );
 
-const Section = ({ title, children, className = '' }) => (
+const Section = ({ title, children, className = '' }: { title: string, children: any, className?: string }) => (
   <div className={`bg-white p-4 md:p-8 mb-8 shadow-lg rounded-lg ${className}`}>
     <div className="flex justify-between items-start mb-6">
       <h2 className="text-3xl md:text-4xl font-black text-gray-700">{title}</h2>
@@ -26,7 +27,7 @@ const Section = ({ title, children, className = '' }) => (
   </div>
 );
 
-const ViewMode = ({ data }) => {
+const ViewMode = ({ data }: { data: BulletinData }) => {
   return (
     <div className="text-gray-800">
       {/* Page 1: Main Cover */}

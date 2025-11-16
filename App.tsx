@@ -1,10 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import EditMode from './components/EditMode.jsx';
-import ViewMode from './components/ViewMode.jsx';
-import { EditIcon, ViewIcon, ShareIcon } from './components/icons.jsx';
+import EditMode from './components/EditMode.tsx';
+import ViewMode from './components/ViewMode.tsx';
+import { EditIcon, ViewIcon, ShareIcon } from './components/icons.tsx';
+import type { BulletinData } from './types.ts';
 
-const initialBulletinData = {
+const initialBulletinData: BulletinData = {
   main: {
     issue: "제26-46호",
     date: "2025.11.16",
@@ -85,7 +86,7 @@ const initialBulletinData = {
 
 
 const App = () => {
-  const [bulletinData, setBulletinData] = useState(initialBulletinData);
+  const [bulletinData, setBulletinData] = useState<BulletinData>(initialBulletinData);
   const [isEditing, setIsEditing] = useState(true);
   const [showCopyMessage, setShowCopyMessage] = useState(false);
 
