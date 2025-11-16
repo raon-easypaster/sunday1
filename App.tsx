@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { BulletinData } from './types';
-import EditMode from './components/EditMode';
-import ViewMode from './components/ViewMode';
-import { EditIcon, ViewIcon, ShareIcon } from './components/icons';
 
-const initialBulletinData: BulletinData = {
+import React, { useState, useEffect } from 'react';
+import EditMode from './components/EditMode.jsx';
+import ViewMode from './components/ViewMode.jsx';
+import { EditIcon, ViewIcon, ShareIcon } from './components/icons.jsx';
+
+const initialBulletinData = {
   main: {
     issue: "제26-46호",
     date: "2025.11.16",
@@ -84,8 +84,8 @@ const initialBulletinData: BulletinData = {
 };
 
 
-const App: React.FC = () => {
-  const [bulletinData, setBulletinData] = useState<BulletinData>(initialBulletinData);
+const App = () => {
+  const [bulletinData, setBulletinData] = useState(initialBulletinData);
   const [isEditing, setIsEditing] = useState(true);
   const [showCopyMessage, setShowCopyMessage] = useState(false);
 
@@ -96,7 +96,7 @@ const App: React.FC = () => {
     if (data) {
       try {
         const decodedData = decodeURIComponent(atob(data));
-        const parsedData: BulletinData = JSON.parse(decodedData);
+        const parsedData = JSON.parse(decodedData);
         setBulletinData(parsedData);
         setIsEditing(false);
         window.history.replaceState({}, '', window.location.pathname);

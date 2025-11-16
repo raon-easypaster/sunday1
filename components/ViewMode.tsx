@@ -1,16 +1,11 @@
 
 import React from 'react';
-import type { BulletinData } from '../types';
-
-interface ViewModeProps {
-  data: BulletinData;
-}
 
 // Fix: Extracted inline styles to constants to improve readability and resolve a potential JSX parsing issue.
 const churchLogoPStyle = { color: '#F2A03D' };
 const churchLogoSpanStyle = { color: '#585858' };
 
-const ChurchLogo: React.FC = () => (
+const ChurchLogo = () => (
   <div className="text-right">
     <div className="inline-block">
       <p className="font-oswald text-xl sm:text-2xl font-bold" style={churchLogoPStyle}>RAON<span className="font-sans" style={churchLogoSpanStyle}>동행</span></p>
@@ -19,7 +14,7 @@ const ChurchLogo: React.FC = () => (
   </div>
 );
 
-const Section: React.FC<{ title: string; children: React.ReactNode; className?: string }> = ({ title, children, className = '' }) => (
+const Section = ({ title, children, className = '' }) => (
   <div className={`bg-white p-4 md:p-8 mb-8 shadow-lg rounded-lg ${className}`}>
     <div className="flex justify-between items-start mb-6">
       <h2 className="text-3xl md:text-4xl font-black text-gray-700">{title}</h2>
@@ -31,7 +26,7 @@ const Section: React.FC<{ title: string; children: React.ReactNode; className?: 
   </div>
 );
 
-const ViewMode: React.FC<ViewModeProps> = ({ data }) => {
+const ViewMode = ({ data }) => {
   return (
     <div className="text-gray-800">
       {/* Page 1: Main Cover */}

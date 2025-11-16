@@ -1,14 +1,8 @@
 
 import React from 'react';
-import type { BulletinData } from '../types';
 
-interface EditModeProps {
-  data: BulletinData;
-  setData: React.Dispatch<React.SetStateAction<BulletinData>>;
-}
-
-const EditMode: React.FC<EditModeProps> = ({ data, setData }) => {
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+const EditMode = ({ data, setData }) => {
+  const handleTextChange = (e) => {
     const { name, value } = e.target;
     const [section, field, subfield] = name.split('.');
     
@@ -16,9 +10,9 @@ const EditMode: React.FC<EditModeProps> = ({ data, setData }) => {
         setData(prev => ({
             ...prev,
             [section]: {
-                ...(prev as any)[section],
+                ...prev[section],
                 [field]: {
-                    ...(prev as any)[section][field],
+                    ...prev[section][field],
                     [subfield]: value
                 }
             }
@@ -26,16 +20,16 @@ const EditMode: React.FC<EditModeProps> = ({ data, setData }) => {
     } else {
         setData(prev => ({
           ...prev,
-          [section]: { ...prev[section as keyof BulletinData], [field]: value }
+          [section]: { ...prev[section], [field]: value }
         }));
     }
   };
 
-  const handleArrayChange = <T,>(section: keyof BulletinData, index: number, field: keyof T, value: string) => {
+  const handleArrayChange = (section, index, field, value) => {
       setData(prev => {
         const sectionData = prev[section];
 
-        const updateArray = (arr: any[]) => {
+        const updateArray = (arr) => {
           const newArray = [...arr];
           newArray[index] = { ...newArray[index], [field]: value };
           return newArray;
@@ -44,27 +38,27 @@ const EditMode: React.FC<EditModeProps> = ({ data, setData }) => {
         if (Array.isArray(sectionData)) {
             return { ...prev, [section]: updateArray(sectionData) };
         } else if (typeof sectionData === 'object' && sectionData !== null) {
-           if ('items' in sectionData && Array.isArray((sectionData as any).items)) {
-             return { ...prev, [section]: { ...(sectionData as object), items: updateArray((sectionData as any).items) } };
+           if ('items' in sectionData && Array.isArray(sectionData.items)) {
+             return { ...prev, [section]: { ...sectionData, items: updateArray(sectionData.items) } };
            }
-           if ('reports' in sectionData && Array.isArray((sectionData as any).reports)) {
-             return { ...prev, [section]: { ...(sectionData as object), reports: updateArray((sectionData as any).reports) } };
+           if ('reports' in sectionData && Array.isArray(sectionData.reports)) {
+             return { ...prev, [section]: { ...sectionData, reports: updateArray(sectionData.reports) } };
            }
-            if ('weekly' in sectionData && Array.isArray((sectionData as any).weekly)) {
-             return { ...prev, [section]: { ...(sectionData as object), weekly: updateArray((sectionData as any).weekly) } };
+            if ('weekly' in sectionData && Array.isArray(sectionData.weekly)) {
+             return { ...prev, [section]: { ...sectionData, weekly: updateArray(sectionData.weekly) } };
            }
         }
         return prev;
       });
   };
 
-  const handleHymnImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHymnImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (event) => {
         setData(prev => ({
           ...prev,
-          hymn: { ...prev.hymn, musicSheet: event.target?.result as string }
+          hymn: { ...prev.hymn, musicSheet: event.target?.result }
         }));
       };
       reader.readAsDataURL(e.target.files[0]);
