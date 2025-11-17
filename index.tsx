@@ -518,7 +518,15 @@ const App = () => {
 
   const handleShare = async () => {
     try {
-      const dataString = JSON.stringify(bulletinData);
+      // Deep copy data to avoid mutating state, and remove image to keep URL short.
+      const dataToShare = JSON.parse(JSON.stringify(bulletinData));
+      if (dataToShare.hymn) {
+        // The base64 image data can make the URL too long, causing "site can't be reached" errors.
+        // Removing it for the share link ensures reliability.
+        dataToShare.hymn.musicSheet = null;
+      }
+
+      const dataString = JSON.stringify(dataToShare);
       const encodedData = btoa(encodeURIComponent(dataString));
       const shareUrl = `${window.location.origin}${window.location.pathname}?data=${encodedData}`;
       
